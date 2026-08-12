@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>HR服务指南 · 知识库</title>
+<style>
+:root{--bg:#f0f4f8;--card:#fff;--primary:#2563eb;--primary-light:#eff6ff;--text:#1e293b;--text2:#64748b;--text3:#94a3b8;--border:#e2e8f0;--danger:#ef4444;--warn:#f59e0b;--green:#10b981;--radius:12px;--shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow:hidden;height:100vh}
+
+.login-screen{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#e8f0fe 0%,#dbeafe 40%,#ede9fe 100%)}
+.login-card{background:#fff;border-radius:16px;padding:48px 40px;width:100%;max-width:420px;box-shadow:0 10px 40px rgba(37,99,235,.08);text-align:center}
+.login-card .logo-icon{font-size:48px;margin-bottom:16px}
+.login-card h1{font-size:22px;font-weight:700;color:#0f172a;margin-bottom:4px}
+.login-card .sub{color:var(--text3);font-size:13px;margin-bottom:28px}
+.role-btn{display:block;width:100%;padding:14px 18px;margin-bottom:8px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:14px;cursor:pointer;transition:all .2s;text-align:left}
+.role-btn:hover{border-color:var(--primary);background:var(--primary-light)}
+.role-btn .rb-icon{font-size:20px;margin-right:10px}
+.role-btn .rb-name{font-weight:600;color:var(--text)}
+.role-btn .rb-hint{display:block;color:var(--text3);font-size:12px;margin-top:2px;margin-left:30px}
+.login-err{color:var(--danger);font-size:13px;margin-top:8px;min-height:20px}
+.pwd-box{display:none;margin-top:6px}
+.pwd-box.show{display:block}
+.pwd-box input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;text-align:center;margin-bottom:8px;outline:none;transition:border .2s}
+.pwd-box input:focus{border-color:var(--primary)}
+.pwd-submit{width:65%;padding:10px;border:none;border-radius:8px;background:var(--primary);color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-right:4%}
+.pwd-submit:hover{background:#1d4ed8}
+.pwd-cancel{width:29%;padding:10px;border:1.5px solid var(--border);border-radius:8px;background:#fff;color:var(--text2);font-size:14px;cursor:pointer}
+.pwd-cancel:hover{background:var(--bg)}
+
+#app{display:none;flex-direction:column;height:100vh}
+#app.visible{display:flex}
+
+.app-header{display:flex;align-items:center;gap:14px;padding:10px 20px;background:#fff;border-bottom:1px solid var(--border);flex-shrink:0;z-index:10}
+.app-logo{font-size:15px;font-weight:700;color:#0f172a;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.app-logo .lo-icon{font-size:20px}
+.role-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;white-space:nowrap}
+.role-badge.emp{background:#dcfce7;color:#166534}
+.role-badge.mgr{background:#fef3c7;color:#92400e}
+.role-badge.hr{background:#dbeafe;color:#1e40af}
+.cloud-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;white-space:nowrap;cursor:pointer}
+.search-box{flex:1;max-width:300px;display:flex;align-items:center;background:var(--bg);border-radius:20px;padding:6px 14px;border:1px solid var(--border);transition:border .2s;min-width:120px}
+.search-box:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.search-box input{flex:1;border:none;background:none;font-size:13px;outline:none;color:var(--text)}
+.search-box input::placeholder{color:var(--text3)}
+.search-box .s-icon{color:var(--text3);font-size:14px;margin-right:6px}
+.search-info{font-size:12px;color:var(--text3);white-space:nowrap;min-width:70px;text-align:right}
+.header-actions{display:flex;align-items:center;gap:6px;margin-left:auto;overflow-x:auto;scrollbar-width:none;flex-shrink:0;max-width:60vw}
+.header-actions::-webkit-scrollbar{display:none}
+.hdr-btn{padding:6px 12px;border-radius:16px;font-size:12px;font-weight:500;cursor:pointer;border:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.hdr-btn.edit-off{background:#f1f5f9;color:var(--text2)}
+.hdr-btn.edit-on{background:var(--warn);color:#fff}
+.hdr-btn.export-btn{background:#ecfdf5;color:#065f46}
+.hdr-btn.export-btn:hover{background:#d1fae5}
+.hdr-btn.import-btn{background:var(--primary-light);color:var(--primary)}
+.hdr-btn.import-btn:hover{background:#dbeafe}
+.hdr-btn.logout-btn{background:#fef2f2;color:#dc2626}
+.hdr-btn.logout-btn:hover{background:#fee2e2}
+
+.app-body{flex:1;display:flex;min-height:0;overflow:hidden}
+
+.sidebar{width:210px;flex-shrink:0;background:#fff;border-right:1px solid var(--border);overflow-y:auto;padding:8px 0;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:2px}
+.sidebar-title{padding:12px 16px 8px;font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.stage-item{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;cursor:pointer;border-left:3px solid transparent;transition:all .15s;font-size:13px;color:var(--text2)}
+.stage-item:hover{background:var(--bg);color:var(--text)}
+.stage-item.active{background:var(--primary-light);border-left-color:var(--primary);color:var(--primary);font-weight:600}
+.stage-item .si-left{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.stage-item .si-icon{font-size:15px;flex-shrink:0}
+.stage-item .si-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stage-item .si-badge{font-size:10px;color:var(--text3);background:#f1f5f9;padding:0 7px;border-radius:10px;flex-shrink:0}
+.stage-item.active .si-badge{background:var(--primary);color:#fff}
+
+.main{flex:1;overflow-y:auto;padding:20px 24px;scrollbar-width:thin}
+.main::-webkit-scrollbar{width:4px}
+.main::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:2px}
+.stage-header{margin-bottom:20px}
+.stage-header h2{font-size:20px;font-weight:700;color:#0f172a;display:flex;align-items:center;gap:8px}
+.stage-header p{color:var(--text2);font-size:13px;margin-top:4px}
+
+.section-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;border:1px solid var(--border);transition:box-shadow .2s}
+.section-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.sc-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;cursor:pointer;user-select:none;gap:12px}
+.sc-header:hover{background:#fafbfc}
+.sc-title{font-size:15px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:10px}
+.sc-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:var(--primary);color:#fff;font-size:12px;font-weight:700;flex-shrink:0}
+.sc-roles{display:flex;gap:4px;flex-shrink:0}
+.sc-role-tag{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500}
+.sc-role-tag.r-hr{background:#dbeafe;color:#1e40af}
+.sc-role-tag.r-mgr{background:#fef3c7;color:#92400e}
+.sc-role-tag.r-emp{background:#dcfce7;color:#166534}
+.sc-arrow{font-size:18px;color:var(--text3);transition:transform .2s;flex-shrink:0}
+.sc-header.open .sc-arrow{transform:rotate(180deg)}
+.sc-body{display:none;padding:0 20px 20px;border-top:1px solid var(--border)}
+.sc-header.open+.sc-body,.sc-body.open{display:block}
+
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:14px;padding-top:16px}
+.info-item{background:var(--bg);border-radius:8px;padding:10px 14px}
+.info-label{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;margin-bottom:2px}
+.info-value{font-size:13px;color:var(--text);font-weight:500}
+
+.detail-block{margin-bottom:14px}
+.detail-block h4{font-size:12px;color:var(--text3);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.detail-block p{font-size:13px;color:var(--text);line-height:1.7;white-space:pre-wrap}
+
+.steps-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px}
+.steps-table th{background:var(--bg);padding:8px 12px;text-align:left;font-weight:600;color:var(--text2);font-size:11px;text-transform:uppercase;letter-spacing:.3px}
+.steps-table td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+.steps-table tr:last-child td{border-bottom:none}
+
+.contact-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.contact-chip{display:inline-flex;align-items:center;gap:6px;background:var(--primary-light);color:var(--primary);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500}
+
+/* FAQ - 可折叠 */
+.faq-list{margin-bottom:14px}
+.faq-item{background:var(--bg);border-radius:8px;margin-bottom:6px;overflow:hidden}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text);user-select:none;transition:background .15s}
+.faq-q:hover{background:#edf2f7}
+.faq-q .faq-q-icon{font-size:18px;color:var(--text3);transition:transform .2s}
+.faq-q.open .faq-q-icon{transform:rotate(90deg);color:var(--primary)}
+.faq-a{display:none;padding:0 14px 10px;font-size:12px;color:var(--text2);line-height:1.7;border-top:1px solid var(--border)}
+.faq-q.open+.faq-a{display:block}
+
+.empty-state{padding:60px 20px;text-align:center;color:var(--text3)}
+.empty-state .es-icon{font-size:48px;margin-bottom:12px}
+.empty-state h3{font-size:16px;color:var(--text2);margin-bottom:4px}
+
+.edit-bar{display:none;align-items:center;gap:8px;padding:0 20px 12px}
+.edit-mode .edit-bar{display:flex}
+.edit-mode .sc-header{cursor:default}
+.edit-mode .sc-header:hover{background:transparent}
+.edit-btn{padding:4px 12px;border-radius:14px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--text2);transition:all .15s}
+.edit-btn:hover{background:var(--bg)}
+.edit-btn.del:hover{background:#fef2f2;border-color:#fecaca;color:var(--danger)}
+.edit-btn.add:hover{background:var(--primary-light);border-color:#bfdbfe;color:var(--primary)}
+.edit-btn.save-section{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,.5);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:var(--radius);width:100%;max-width:600px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-header h3{font-size:16px;font-weight:600}
+.modal-close{width:32px;height:32px;border-radius:50%;border:none;background:var(--bg);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--text2)}
+.modal-body{padding:20px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:4px}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;outline:none;transition:border .2s}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--primary)}
+.form-group textarea{min-height:80px;resize:vertical}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;padding-top:8px}
+.form-actions button{padding:8px 20px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .2s}
+.btn-cancel{background:var(--bg);color:var(--text2)}
+.btn-cancel:hover{background:var(--border)}
+.btn-submit{background:var(--primary);color:#fff}
+.btn-submit:hover{background:#1d4ed8}
+.btn-danger{background:var(--danger);color:#fff}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 24px;border-radius:24px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.toast.success{background:#065f46}
+.toast.error{background:#991b1b}
+
+@media print{
+body{overflow:visible;height:auto;background:#fff}
+.sidebar,.app-header,.edit-bar,.search-info,.header-actions,.sc-arrow{display:none!important}
+.main{padding:0;overflow:visible}
+.section-card{box-shadow:none;border:1px solid #e5e7eb;break-inside:avoid;margin-bottom:8px}
+.sc-body{display:block!important}
+}
+
+@media(max-width:768px){
+.sidebar{width:64px}
+.sidebar .si-name,.sidebar .si-badge,.sidebar-title{display:none}
+.stage-item{justify-content:center;padding:12px}
+.stage-item .si-icon{font-size:18px}
+.main{padding:14px}
+.info-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+<div class="login-card">
+<div class="logo-icon">📚</div>
+<h1>HR服务指南 · 知识库</h1>
+<p class="sub">选择您的角色以查看相应内容</p>
+<button class="role-btn" onclick="login('employee')">
+<span class="rb-icon">👤</span><span class="rb-name">我是员工</span>
+<span class="rb-hint">查看考勤、休假、薪酬、差旅等服务指南</span>
+</button>
+<button class="role-btn" id="mgrLoginBtn" onclick="showMgrPwd()">
+<span class="rb-icon">👥</span><span class="rb-name">我是管理者</span>
+<span class="rb-hint">查看审批、团队管理、招聘录用等指南（需密码）</span>
+</button>
+<button class="role-btn" id="hrLoginBtn" onclick="showHrPwd()">
+<span class="rb-icon">⚙️</span><span class="rb-name">管理员入口</span>
+<span class="rb-hint">完整权限：查看、编辑、导入导出知识库（需密码）</span>
+</button>
+<div class="pwd-box" id="mgrPwdBox">
+<input type="password" id="mgrPwdInput" placeholder="请输入管理者验证码" onkeydown="if(event.key==='Enter')verifyMgr()">
+<button class="pwd-submit" onclick="verifyMgr()">确认登录</button>
+<button class="pwd-cancel" onclick="hideMgrPwd()">取消</button>
+</div>
+<div class="pwd-box" id="hrPwdBox">
+<input type="password" id="hrPwdInput" placeholder="请输入管理员密码" onkeydown="if(event.key==='Enter')verifyHr()">
+<button class="pwd-submit" onclick="verifyHr()">确认登录</button>
+<button class="pwd-cancel" onclick="hideHrPwd()">取消</button>
+</div>
+<p class="login-err" id="loginErr"></p>
+</div>
+</div>
+
+<div id="app">
+<header class="app-header">
+<div class="app-logo"><span class="lo-icon">📚</span>HR服务指南</div>
+<span class="role-badge" id="roleBadge"></span>
+<span class="cloud-badge" id="cloudBadge" style="cursor:pointer" onclick="syncNow()" title="点击手动同步">🔄 加载中...</span>
+<div class="search-box">
+<span class="s-icon">🔍</span>
+<input type="text" id="searchInput" placeholder="搜索服务指南..." oninput="doSearch()">
+</div>
+<span class="search-info" id="searchInfo"></span>
+<div class="header-actions">
+<button class="hdr-btn edit-off" id="editToggle" onclick="toggleEdit()">✏️ 编辑模式</button>
+<button class="hdr-btn export-btn" onclick="exportData()">📥 导出</button>
+<button class="hdr-btn import-btn" onclick="triggerImport()">📤 导入</button>
+<button class="hdr-btn" style="background:#fefce8;color:#a16207" onclick="promptPat()">🔑 同步设置</button>
+<button class="hdr-btn logout-btn" onclick="logout()">🚪 退出</button>
+</div>
+</header>
+<div class="app-body">
+<nav class="sidebar" id="sidebar"></nav>
+<main class="main" id="mainContent"></main>
+</div>
+</div>
+
+<div class="modal-overlay" id="editModal">
+<div class="modal" id="modalContent"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<input type="file" id="importFile" accept=".json" style="display:none" onchange="handleImport(event)">
+
+<script>
+const EMBEDDED_DATA = [{"stage": "预入职管理", "icon": "📥", "desc": "候选人Offer确认后到入职前的全流程管理，含入职体检、Offer审批与发放、背景调查、入职准备与报到等", "id": "pre-onboarding", "sections": [{"title": "入职体检", "icon": "1", "roles": ["HR", "管理者", "员工"], "info": [{"label": "发起人", "value": "中国区人力资源共享服务中心 | HRService CN"}, {"label": "参与人", "value": "候选人"}, {"label": "时间节点", "value": "入职前15个工作日发通知 → 入职前14个工作日体检 → 入职前11个工作日出结果"}, {"label": "报告周期", "value": "体检机构出具报告需3个工作日"}], "detail": "HRService CN向候选人发送体检通知邮件。天津地区由 HRService CN联系供应商安排，其他地区候选人自行预约。候选人需将预约时间同步在微信群内。\n\n体检结果处理：\n• 合格 → HRService CN通知TA继续推进入职流程\n• 轻度异常 → HRService CN在微信群告知候选人需要复查的项目\n• 复查仍不合格 →  HRService CN反馈TA → TA与业务部门沟通判定 → TA将结果通知 HRService CN及候选人", "steps": [["Step 1", "HRService CN", "发送体检通知（含体检项目和注意事项）", "入职前15个工作日"], ["Step 2", "候选人", "预约体检，微信群同步预约时间", "入职前15个工作日"], ["Step 3", "候选人", "完成体检", "入职前14个工作日"], ["Step 4", "HRService CN", "获取并反馈体检报告", "入职前11个工作日"], ["Step 5", "HRService CN → TA", "合格→继续流程；异常→启动异常处理", "入职前11个工作日"]], "contacts": [{"name": "HRService CN", "role": "体检统筹与结果跟进"}], "faq": [{"q": "女性候选人生理期怎么办？", "a": "可顺延体检时间，以候选人在微信群内确认的时间为准，TA负责与部门负责人同步。"}, {"q": "外地入职怎么体检？", "a": "候选人在当地二甲以上医院自行体检，结果发送至HRService CN 邮箱。"}]}, {"title": "Offer审批与发放", "icon": "2", "roles": ["HR", "管理者"], "info": [{"label": "发起人", "value": "TA"}, {"label": "审批人", "value": "根据TA审批流程操作"}, {"label": "系统", "value": "北森"}, {"label": "时间节点", "value": "入职前11个工作日新建 → 入职前10个工作日发放"}], "detail": "TA在北森系统新建Offer并提交审批。批准后发放Offer，抄送Jessie（jessie.xiong@tjprog.com）。\n\n⚠ 特殊规则：每月25日（含）后不建议入职。\n\n候选人收到Offer后需完成：① 一键确认Offer  ② 填写入职信息采集", "steps": [["Step 1", "TA", "与HRService CN确认候选人入职主体，并发送候选人入职信息条", "入职前11个工作日"], ["Step 2", "TA", "北森系统新建Offer并提交审批", "入职前11个工作日"], ["Step 3 |相关负责人", "审批", "入职前11个工作日", ""], ["Step 4", "TA", "发放Offer（抄送Jessie），微信/电话通知候选人", "入职前10个工作日"], ["Step 5", "候选人", "回签Offer + 填写入职信息采集", "入职前10个工作日"]], "contacts": [{"name": "TA", "role": "Offer发放"}, {"name": "Jessie", "role": "Offer抄送 (jessie.xiong@tjprog.com)"}, {"name": "HRService CN", "role": "入职流程对接"}], "faq": [{"q": "候选人回签后还能改入职日期吗？", "a": "可以，但TA需第一时间同步HRService CN评估影响并调整后续流程时间。"}]}, {"title": "背景调查", "icon": "3", "roles": ["HR", "管理者"], "info": [{"label": "发起人", "value": "TA"}, {"label": "执行方", "value": "第三方背调公司"}, {"label": "系统", "value": "北森 、 背调平台"}, {"label": "周期", "value": "国内4个工作日 / 海外7-15个工作日"}, {"label": "时间节点", "value": "入职前10个工作日发起 → 入职前4个工作日出结果"}], "detail": "候选人回签Offer后，TA在北森系统发起背调。海外经历需先发需求至HRService CN邮箱。\n\n候选人需在收到链接后2天内完成授权填写。", "steps": [["Step 1", "TA", "北森系统发起背调，选择套餐", "入职前10个工作日"], ["Step 2", "背调公司", "向候选人发送授权书和信息收集链接", "入职前10个工作日"], ["Step 3", "候选人", "完成授权并填写信息（2天内）", "入职前8个工作日"], ["Step 4", "背调公司", "出具终版背调报告", "入职前4个工作日"], ["Step 5", "TA", "将背调结果反馈业务部门，跟进录用决议", "入职前4个工作日"], ["Step 6", "TA", "将业务部门最终决议同步HRService CN", "入职前4个工作日"]], "contacts": [{"name": "TA", "role": "发起背调及录取结果反馈"}, {"name": "HRService CN", "role": "跟进候选人填写、对接背调公司"}, {"name": "HRService CN邮箱", "role": "HRservice.cn@business-association.com"}], "faq": []}, {"title": "入职准备与报到", "icon": "4", "roles": ["HR", "管理者"], "info": [{"label": "负责方", "value": "HRService CN ：准备齐全入职物品；Simon：IT、权限；Queena：电脑"}, {"label": "时间", "value": "入职前4个工作日 → 入职前1个工作日"}], "detail": "入职前4个工作日：Queena领电脑\n入职前3-4个工作日：Simon装机 + 配置权限（需直线经理确认）\n入职前3个工作日：HRService CN寄出电脑（非天津入职）\n入职前1个工作日：确认工位 → 布置工位 → 邮件+电话通知候选人报到\n入职前1个工作日下午4点后：通知直线经理/BP新人即将入职", "steps": [["Step 1", "HRService CN", "通知Queena领电脑", "入职前4个工作日"], ["Step 2", "Simon", "配置系统权限（需直线经理确认）及完成装机", "入职前3-4个工作日"], ["Step 3", "HRService CN", "寄出电脑（非天津入职）", "入职前3个工作日"], ["Step 4", "Queena", "确认工位+布置工位", "入职前1个工作日"], ["Step 5", "HRService CN", "邮件+电话通知候选人报到，并核查上家单位离职证明与最高学历学位证书", "入职前2个工作日"], ["Step 6", "HRService CN", "通知直线经理/BP新人即将入职（下午4点后）", "入职前1个工作日"]], "contacts": [{"name": "Queena", "role": "行政：电脑领取、工位布置"}, {"name": "Simon", "role": "IT：装机、权限配置"}], "faq": []}]}, {"stage": "入职管理", "icon": "🚪", "desc": "入职当天手续办理、入职引导与首周安排", "id": "onboarding", "sections": [{"title": "入职当天手续办理", "icon": "1", "roles": ["HR", "管理者", "员工"], "info": [{"label": "负责方", "value": "HRService CN"}, {"label": "地点", "value": "各城市办公室（详见报到通知）"}], "detail": "入职当天需携带：\n身份证原件及复印件、最高学历学位证书原件及复印件、上一家公司离职证明、银行卡（工资卡）。\n\n现场完成：材料核验 →入职材料签署及返还 → 入职培训 → 录门禁", "steps": [], "contacts": [{"name": "HRService CN", "role": "现场入职手续办理"}, {"name": "Queena", "role": "录门禁"}], "faq": [{"q": "远程入职如何处理？", "a": "线上腾讯会议完成入职流程。"}, {"q": "入职当天需要多长时间？", "a": "通常1-2小时，含材料核验、合同签署和入职引导。"}]}, {"title": "入职引导与首周安排", "icon": "2", "roles": ["HR", "管理者", "员工"], "info": [{"label": "负责方", "value": "HRService CN （个人介绍）；HRBP/直线上级（其他项目）"}], "detail": "1.团队介绍和办公环境熟悉 \n2.说明首周工作安排和目标\n3.完成试用期目标设定\n4.填写北森个人介绍", "steps": [], "contacts": [{"name": "TA", "role": "Offer发放"}, {"name": "Jessie", "role": "Offer抄送 (jessie.xiong@tjprog.com)"}, {"name": "HRService CN", "role": "入职流程对接"}], "faq": []}]}, {"stage": "试用期管理", "icon": "🌱", "desc": "试用期目标设定、试用期过程回顾、转正考核与审批", "id": "probation", "sections": [{"title": "试用期目标设定", "icon": "1", "roles": ["管理者", "员工", "HR"], "info": [{"label": "发起人", "value": "直线经理"}, {"label": "参与人", "value": "员工、HRBP"}, {"label": "时间", "value": "入职后1-2周内"}, {"label": "试用期时长", "value": "通常6个月（以劳动合同为准）"}], "detail": "直线经理与员工共同制定试用期工作目标和关键成果，经HRBP确认后存档。目标应具体、可衡量、与岗位职责匹配。\n详情参见邮件【新员工入职及试用期任务提醒】中附件《试用期管理配套表格》。", "steps": [], "contacts": [{"name": "HRBP", "role": "目标设定指导与存档"}], "faq": [{"q": "试用期目标可以调整吗？", "a": "可以。试用期内，如业务调整需修改目标，须与直线经理沟通并重新确认，同步HRBP。"}]}, {"title": "试用期过程回顾", "icon": "2", "roles": ["管理者", "员工", "HR"], "info": [{"label": "发起人", "value": "直线经理 / HRBP"}, {"label": "时间", "value": "试用期内随时回顾，例如：项目完成时或入职满1个月/3个月时选择发起回顾。"}], "detail": "直线经理与员工进行回顾面谈：评估目标完成进度、工作表现、团队融入情况。发现问题及时调整。如评估不理想，直线经理与HRBP共同制定改进计划。", "steps": [], "contacts": [{"name": "TA", "role": "Offer发放"}, {"name": "Jessie", "role": "Offer抄送 (jessie.xiong@tjprog.com)"}, {"name": "HRService CN", "role": "入职流程对接"}], "faq": []}, {"title": "转正考核与审批", "icon": "3", "roles": ["管理者", "员工", "HR"], "info": [{"label": "发起人", "value": "员工"}, {"label": "审批人", "value": "直线经理 → HRBP"}, {"label": "系统", "value": "北森系统"}, {"label": "时间", "value": "试用期结束前2-4周启动"}], "detail": "流程：员工提交转正申请（系统自动发起）→直线经理完成能力评价及转正审批 → HRBP终审并存档 → 发放转正通知。", "steps": [], "contacts": [{"name": "HRBP", "role": "转正流程跟进"}], "faq": [{"q": "转正未通过怎么办？", "a": "终止劳动关系，HR会指导整个流程。"}]}]}, {"stage": "考勤与假期", "icon": "📅", "desc": "考勤、年休假、病假、事假、产假相关假期等各类假期的申请与审批", "id": "attendance-leave", "sections": [{"title": "考勤", "icon": "1", "roles": ["员工", "管理者", "HR"], "info": [{"label": "工作时间", "value": "8:30-9:30区间到岗，17:30-18:30区间下班（弹性工作制，需满8小时，1小时午餐不计入工时）"}], "detail": "公司实行弹性工作制。因时差或临时任务需在家办公的，须提前与直线管理者报备并获同意，并告知预计到达/离开办公室时间。\n\n【迟到/早退】到岗时间晚于公司规定视为迟到；下班时间早于规定或工作时长不满8小时（不含午餐1小时）视为早退。\n【加班与调休】原则上鼓励高效工作，弹性（不定时）工作制岗位工作日不计加班；法定节假日加班经批准后按国家标准支付加班费（三薪）；休息日加班按规定安排调休（满4小时=0.5天，满8小时=1天，每日加班上限8小时）。加班须当天下班后在北森系统申请，特殊情况不超过加班后15个自然日内补申请，未经审批不视为加班。调休须在次年3月31日（含）前休完，逾期视为自动放弃，且调休不可预支。\n【旷工】应出勤未出勤且未获批准请假、请假期满未续假擅自不到岗、突发情况未在1小时内请假或3个工作日内补办手续、虚假理由请假、不服从工作调动安排等情形均视为旷工，扣除当日工资；连续旷工3天(含)以上或一年内累计5次(含)以上属严重违纪，公司可解除劳动合同且不支付经济补偿。", "steps": [["Step 1", "员工", "提前在北森系统申请假期/加班（2个工作日内假期需提前2个工作日申请；2个工作日以上需提前2周申请）", "休假/加班前"], ["Step 2", "直线经理", "审批", "收到申请后"], ["Step 3", "员工", "突发情况先通过微信/Cliq/邮件向直线经理申请并获批", "休假当天9:30前"], ["Step 4", "员工", "在北森系统补办请假/加班手续", "事后2个工作日内"]], "contacts": [{"name": "直线经理", "role": "考勤/加班审批"}], "faq": [{"q": "突发情况来不及提前请假怎么办？", "a": "须于当天上午9:30前通过微信、Cliq或邮件向直线经理申请并获批，并在事后2个工作日内在人事系统补办请假手续，否则可能按旷工处理。"}, {"q": "工作日加班有加班费吗？", "a": "弹性（不定时）工作制岗位工作日不计加班；法定节假日加班经批准后按国家标准支付三薪；休息日加班按规定安排调休。"}, {"q": "调休一直不休会怎样？", "a": "须在实际发生加班后次年3月31日（含）前休完，经公司提醒仍未使用的视为自动放弃。"}]}, {"title": "年休假", "icon": "2", "roles": ["员工", "管理者"], "info": [{"label": "发起人", "value": "员工本人"}, {"label": "审批人", "value": "直线管理者"}, {"label": "最小申请单位", "value": "0.5个工作日"}, {"label": "系统路径", "value": "北森系统-我的假勤-请假-休假项目「年假」"}], "detail": "年休假包含法定年休假与公司福利年休假两部分，法定年假与福利年假总天数每年不超过20天：\n\n【法定年假天数（按累计社会工龄）】\n工龄1年（含）-10年：5天\n工龄10年（含）-20年：10天\n工龄20年（含）以上：15天\n\n【公司福利年假】根据司龄增长，每满一年司龄增加1天福利年假；员工须先休完法定年假后方可申请福利年假。\n\n员工自正式入职之日起计算带薪年休假，按自然年（1月1日-12月31日）核算，当年服务不满整年的按实际在职时间比例折算。当年度年假须在次年3月31日（含）前休完，经公司提醒仍未使用的将清零且不予工资补偿。", "steps": [["Step 1", "员工", "北森系统查询年假余额并提交申请（2个工作日以上需提前2周申请）", "休假前"], ["Step 2", "直线经理", "审批", "收到申请后"]], "contacts": [{"name": "TA", "role": "Offer发放"}, {"name": "Jessie", "role": "Offer抄送 (jessie.xiong@tjprog.com)"}, {"name": "HRService CN", "role": "入职流程对接"}], "faq": [{"q": "年假可以跨年结转吗？", "a": "可以，当年度年假须在次年3月31日（含）前休完，逾期清零且不予工资补偿。"}, {"q": "离职时年假没休完怎么办？", "a": "公司会在离职前统筹安排休完。"}]}, {"title": "病假", "icon": "3", "roles": ["员工", "管理者", "HR"], "info": [{"label": "病假申请最小单位", "value": "0.5天"}, {"label": "病假证明", "value": "请（休）超过2个工作日须提供社保定点医院诊断证明/病假条"}], "detail": "【病假】因患病或非因公负伤需停止工作治疗或休息的可请病假，超过2个工作日须提供社保定点医院开具的病假证明，不得以多次2天以内请假规避证明要求；公司如有合理怀疑，可要求员工进一步提交病例、诊断证明等材料或到指定医院复核。\n【付薪标准】自然年内累计病休10天（含）以下，基本工资正常发放；超过10天且未启动医疗期的，从第11天起按基本工资40%计发（劳动合同所在地最低工资标准的80%更高的，就高执行）；启动医疗期后，按劳动合同注册地最低工资标准的80%计发，医疗期为3-24个月（以国家规定为准）。\n【福利带薪病假】全年10天，按当年实际在职时间比例折算，不结转次年，离职不折现；实际病假天数超出证明天数的须以年假/调休/事假补齐，否则按旷工处理。", "steps": [], "contacts": [], "faq": [{"q": "病假需要提供什么证明？", "a": "请（休）病假超过2个工作日的，需提供社保定点医院开具的病例、诊断证明等材料，公司必要时可要求复查。"}]}, {"title": "事假", "icon": "4", "roles": ["员工", "管理者", "HR"], "info": [{"label": "事假", "value": "无薪假，须先休完年假、调休假后方可申请"}, {"label": "事假最小单位", "value": "0.5个工作日"}], "detail": "【事假】无薪假期，须先休完年休假、调休假后方可申请，经直线管理者审批；未经批准或实际休假天数超过申请天数的视为旷工。一个自然年内累计事假超过15个工作日的，公司有权不予审批。", "steps": [], "contacts": [], "faq": [{"q": "事假可以直接申请吗？", "a": "不可以，须先休完年休假、调休假后才能申请事假。"}, {"q": "一年可以请多少事假？", "a": "累计不超过15个工作日，超过公司可不予审批。"}]}, {"title": "产假相关假期", "icon": "5", "roles": ["员工", "管理者", "HR"], "info": [{"label": "产假", "value": "具体以当地政策为准"}, {"label": "产检假", "value": "按月发放，每次给予0.5-1天"}, {"label": "哺乳时间", "value": "每天1小时，直至婴儿满1周岁"}, {"label": "陪产假", "value": "男员工可依法享受陪产假，具体以当地政策为准"}], "detail": "【产假与流产假】正常产假98个自然日（其中产前可休15个自然日）；难产增加15个自然日；多胞胎每多生育1个婴儿增加15个自然日；孕期未满4个月流产享受15个自然日产假，满4个月流产享受42个自然日产假。产假期间享受生育津贴，津贴低于本人产假期间工资的公司补足差额，高于工资的足额发给员工，不重复获得工资和生育津贴。\n\n【产检假】妊娠1-6月每月1次、7-8月每月2次、9月以上至申请产假前每月4次带薪产检假，每次给予0.5-1天。\n\n【哺乳时间】哺乳未满1周岁婴儿的女员工每天享受1小时哺乳时间，多胞胎每多哺乳1个婴儿每天增加1小时，实际休假时间不累计、不调休、不折现。\n\n【陪产假】男员工可依法享受陪产假，须在配偶预产期前15自然日至分娩后3个月内，可分3次休完，不折现，逾期不补休。\n\n以上假期均须提前在北森系统申请，并上传相应证明材料。", "steps": [], "contacts": [], "faq": [{"q": "产假期间工资怎么发？", "a": "产假期间享受生育津贴，若津贴低于本人正常工资，公司补足差额；若高于工资，全额发给员工，不重复领取。"}]}, {"title": "婚假、育儿假及丧假", "icon": "6", "roles": ["员工", "管理者", "HR"], "info": [{"label": "婚假", "value": "须提供结婚证，领证之日起12个月内一次性休完（具体以当地政策为准）"}, {"label": "育儿假", "value": "子女满3周岁前，每周岁年度可享受育儿假"}, {"label": "丧假", "value": "直系亲属5天，其他亲属3天"}], "detail": "【婚假】办理结婚登记手续后可享受，为连续假期（含法定节假日和公休日），须一次性休完，自领取结婚证之日起12个月内使用，逾期视为自动放弃，不予补休或折现。\n\n【育儿假】子女满3周岁前，每周岁年度可享受育儿假（具体天数以国家/当地最新规定及公司政策为准，服务不满整年的按比例折算），可连续或分散享受，须在子女周岁年度当年内使用，逾期不结转、不补偿。女员工须休完产假后方可申请育儿假。\n\n【丧假】直系亲属（父母、配偶父母、配偶、子女）5天；祖父母、外祖父母、同胞兄弟姐妹3天；须在亲属去世之日起1个月内一次性休完，逾期视为放弃，不予补休或折现。\n\n以上假期均须提前在北森系统申请，并上传相应证明材料。", "steps": [], "contacts": [], "faq": [{"q": "婚假必须一次休完吗？", "a": "是的，婚假须连续一次性休完，不得分期休假，且须在领证后12个月内使用，逾期不予补休或折现。"}, {"q": "丧假需要提供证明么？", "a": "一般不需要，如有特殊情况HRService CN会联系员工。"}]}]}, {"stage": "薪酬与福利", "icon": "💰", "desc": "薪资结构与发放、商业保险、补充福利（团建、年节礼、生日卡等）等", "id": "compensation-benefits", "sections": [{"title": "薪资结构与发放", "icon": "1", "roles": ["员工", "HR"], "info": [{"label": "发薪日", "value": "次月5日前发放上月工资（遇休息日/节假日顺延）"}, {"label": "负责方", "value": "FACE Team/HRService CN"}], "detail": "加班工资、特殊情况下应支付/应扣除的工资在次月一并处理。新入职或离职员工当月服务不满整月的，按实际出勤工作日计算工资。\n\n员工从公司取得的所有收入（基本工资、津贴、变动收入等）均依法代扣代缴个人所得税，并依国家规定代扣代缴个人应承担的社保、公积金。\n\n薪酬信息（含工资金额构成、调薪情况、奖金提成、长期激励、津贴等）属保密信息，员工不得主动向他人泄露本人薪酬信息，也不得打探他人薪酬信息，违反薪酬保密义务属严重违反规章制度，公司有权解除劳动关系。", "steps": [], "contacts": [{"name": "FACE Team", "role": "工资发放相关事宜"}, {"name": "HRService CN", "role": "加班费统计"}], "faq": [{"q": "可以和同事讨论工资吗？", "a": "不可以，薪酬信息属保密信息，员工不得泄露本人薪酬或打探他人薪酬，违反视为严重违纪，公司有权解除劳动关系。"}, {"q": "加班费什么时候发？", "a": "加班工资将在次月一并处理。"}]}, {"title": "商业保险", "icon": "2", "roles": ["员工", "HR"], "info": [{"label": "商业保险", "value": "公司为正式员工购买补充医疗与意外险"}], "detail": "具体方案以公司当年度保险合同为准，详细内容请见「日常人事服务」板块或联系HRService CN确认最新方案。\n\n差旅期间另有专属保险安排：境内出差报销范围为与机票绑定/默认购买的基础航空意外险，员工自行购买的更高保障商业综合险费用自理；境外出差由公司统一投保，员工出差申请时须在系统中完整填写《美亚商旅无忧保险投保单-适用中国合同主体》，详情联系HRService CN。", "steps": [], "contacts": [{"name": "TA", "role": "Offer发放"}, {"name": "Jessie", "role": "Offer抄送 (jessie.xiong@tjprog.com)"}, {"name": "HRService CN", "role": "入职流程对接"}], "faq": [{"q": "日常商业保险方案在哪里查看？", "a": "具体保险方案联系HRService CN"}, {"q": "出差期间的保险有哪些？", "a": "海外差旅由公司统一投保，需在差旅申请时填写《美亚商旅无忧保险投保单》，详见「差旅与报销」板块。"}]}, {"title": "补充福利", "icon": "3", "roles": ["员工", "管理者", "HR"], "info": [{"label": "福利", "value": "团建活动、年节福利、生日福利"}], "detail": "公司提供补充福利，具体标准以现行制度及最新通知为准：\n\n具体标准、发放形式及适用范围以公司当年度行政通知及相关福利制度为准，如有调整以最新公示为准。", "steps": [], "contacts": [{"name": "部门负责人 / HRBP", "role": "团建及福利活动统筹"}, {"name": "Admin", "role": "公司级团建、相关福利落地执行"}], "faq": [{"q": "团建费用怎么使用？", "a": "具体标准以公司当年度通知及相关福利制度为准，请联系部门负责人/HRBP了解最新安排。"}]}]}, {"stage": "培训与发展", "icon": "🎓", "desc": "内部培训、外部培训申请、北森学习平台等，支持员工持续学习与成长", "id": "training-development", "sections": [{"title": "内部培训", "icon": "1", "roles": ["员工", "管理者", "HR"], "info": [{"label": "发起人", "value": "部门负责人/HR部门"}], "detail": "内容包括：\n• 新员工入职培训：入职后1-2周内参加，涵盖企业文化、规章制度、IT系统使用等\n• 岗位技能培训：根据岗位需求和个人发展计划，员工可参加内部培训课程，由公司内部讲师或邀请外部专家进行", "steps": [], "contacts": [{"name": "HRBP", "role": "培训方案执行"}], "faq": [{"q": "入职培训什么时候启动？", "a": "新员工入职后1-2周内由HR统一安排，需完成规定的新员工学习任务。"}]}, {"title": "外部培训申请", "icon": "2", "roles": ["员工", "管理者", "HR"], "info": [{"label": "发起人", "value": "部门负责人"}, {"label": "费用承担", "value": "所属部门自行承担"}], "detail": "目前仅可参与外部免费培训。如需参加外部付费培训，由部门负责人申请，费用由所属部门自行承担。部分高额培训需签署培训服务期协议。", "steps": [], "contacts": [{"name": "TA", "role": "Offer发放"}, {"name": "Jessie", "role": "Offer抄送 (jessie.xiong@tjprog.com)"}, {"name": "HRService CN", "role": "入职流程对接"}], "faq": [{"q": "外部培训费用谁承担？", "a": "由所属部门自行承担，部门负责人申请审批。"}, {"q": "可以自己报名外部培训吗？", "a": "可以，但目前以外部免费培训为主，如需付费培训须经部门负责人审批。"}]}, {"title": "北森学习平台", "icon": "3", "roles": ["员工", "管理者", "HR"], "info": [{"label": "内容", "value": "内部课程、外部免费在线课程资源"}], "detail": "北森学习平台提供免费在线课程资源，员工可根据个人发展需要自主学习。平台包含内部制度学习、通用技能、管理能力、行业知识等多类课程。", "steps": [], "contacts": [{"name": "HRBP", "role": "培训平台使用"}], "faq": [{"q": "北森学习平台怎么登录？", "a": "使用公司统一账号登录北森系统，进入学习模块即可。北森登陆网址：https://happyglobals.italent.cn/"}]}]}, {"stage": "调动与晋升", "icon": "🔄", "desc": "内部调动、晋升（12步流程）、降级与调岗处理等", "id": "transfer-promotion", "sections": [{"title": "内部调动", "icon": "1", "roles": ["员工", "管理者", "HR"], "info": [{"label": "适用对象", "value": "中国区全体员工"}, {"label": "调动条件", "value": "试用期通过后且在司无重大违纪记录"}], "detail": "基于公平竞争和人岗匹配原则，考虑以下场景的人员调动：\n\n场景一：部门间调动（部门单方意愿调出员工）\n场景二：员工主动提出转岗\n场景三：组织架构调整（合并/拆分）\n场景四：内部岗位竞聘\n\n特殊场景：凡不属于上述场景的，优先联系部门负责人/HRBP沟通。\n实操流程：调出HRBP发起→相关人员审批→HRService CN手续办理\n具体详见《内部人才调动管理办法》。", "steps": [], "contacts": [{"name": "部门负责人/HRBP", "role": "调动流程协调、人岗匹配、信息同步"}, {"name": "HRService CN", "role": "北森系统发起调动审批、手续办理"}], "faq": [{"q": "转岗后试用期/考察期怎么算", "a": "新部门第一个月指定业务导师进行工作指导。"}, {"q": "调动后社保公积金怎么处理？", "a": "HRService CN在调动手续中确认是否需要变更社保公积金缴纳地和劳动合同主体。如需要，HRService CNC配合进行变更。"}]}, {"title": "晋升", "icon": "2", "roles": ["员工", "管理者", "HR"], "info": [{"label": "晋升周期", "value": "入职满6个月或距上次晋升/涨薪满6个月后可发起"}, {"label": "薪资生效规则", "value": "25日（含）前生效→当月发薪体现；25日后→次月体现"}], "detail": "晋升需同时考虑员工能力与潜力，认同公司的价值观与经营理念。\n\n晋升申请需要填写晋升文档，需使用STAR法则进行案例呈现，并获取相关跨部门支持人案例支持。\n\n实操流程：部门提报→员工填写晋升文档→提交公司管理层审批→结果反馈\n具体详见《晋升制度》。", "steps": [], "contacts": [{"name": "TA", "role": "Offer发放"}, {"name": "Jessie", "role": "Offer抄送 (jessie.xiong@tjprog.com)"}, {"name": "HRService CN", "role": "入职流程对接"}], "faq": [{"q": "晋升有固定窗口吗？", "a": "有固定窗口，一般为每年的6月和12月。"}, {"q": "涨薪有固定窗口吗？", "a": "没有固定窗口，部门负责人评估可基于事实随时提报。但需满足入职满6个月或距上次晋升/涨薪满6个月后的时间条件。"}]}, {"title": "降级与调岗处理", "icon": "3", "roles": ["管理者", "HR"], "info": [], "detail": "因绩效不达标或组织调整等原因，可能涉及降级或调岗。需经正式评估和审批，确保合规合法。HRBP全程参与并提供法律支持。", "steps": [], "contacts": [{"name": "HRBP", "role": "联络人"}], "faq": []}]}, {"stage": "合同管理", "icon": "📝", "desc": "劳动合同签订、合同续签、合同变更", "id": "contract-management", "sections": [{"title": "劳动合同签订", "icon": "1", "roles": ["员工", "管理者", "HR"], "info": [{"label": "签订日期", "value": "入职当天签订"}], "detail": "签订《劳动合同》等相关文件，合同载明合同期限、试用期、工作内容、工作地点、薪资待遇等核心条款，请仔细阅读后签字。", "steps": [], "contacts": [{"name": "HRService CN", "role": "政策答疑"}], "faq": [{"q": "合同一般在什么时候签？", "a": "新员工应于入职当天到人力资源部办理入职手续并签订《劳动合同》等相关文件。"}]}, {"title": "合同续签", "icon": "2", "roles": ["员工", "管理者", "HR"], "info": [{"label": "审批", "value": "相关人员审批"}, {"label": "员工确认", "value": "须员工本人同意续签"}], "detail": "劳动合同到期前，公司将安排续签评估。\n\n实操流程：双方确认→HRService CN续签劳动合同\n\n员工应配合公司在劳动合同到期前完成续签文件签署工作。如员工未按公司要求完成相关续签工作，视为员工不同意与公司续签劳动合同，公司有权终止与员工的劳动关系，且无需支付经济补偿。", "steps": [], "contacts": [{"name": "TA", "role": "Offer发放"}, {"name": "Jessie", "role": "Offer抄送 (jessie.xiong@tjprog.com)"}, {"name": "HRService CN", "role": "入职流程对接"}], "faq": [{"q": "员工不同意续签会怎样？", "a": "视为不同意与公司续签劳动合同，公司有权终止劳动关系，且无需支付经济补偿。"}]}, {"title": "合同变更", "icon": "3", "roles": ["管理者", "HR"], "info": [{"label": "签署条件", "value": "如发生工作变化，需调整劳动合同的情形"}], "detail": "如发生工作地点、工作岗位、工作内容变化（含职位调升、平级调职、降职、部门变化、汇报体系变化、跨区域调整等），或因此产生薪资待遇调整的，公司将与员工协商签署书面《劳动合同变更书》\n\n实操流程：双方确认→HRService CN续签劳动合同", "steps": [], "contacts": [], "faq": [{"q": "调岗一定要签变更协议吗？", "a": "是的，涉及工作地点、岗位、内容变化或薪资调整的，公司将与员工签订书面《劳动合同变更书》，双方各执一份。"}, {"q": "内部调动有什么前提条件？", "a": "原则上须在试用期通过后，且在职期间无重大违纪记录，需调动双方部门达成一致并完成工作交接后方可启动调动审批。"}]}]}, {"stage": "日常人事服务", "icon": "🛎", "desc": "签证办理、证明开具、社保公积金查询、个人信息变更、商业保险等在职期间的人事服务", "id": "daily-hr-services", "sections": [{"title": "签证办理", "icon": "1", "roles": ["员工", "管理者", "HR"], "info": [{"label": "适用对象", "value": "中国区所有需办理签证的员工（含候选人和在职员工）"}], "detail": "办理流程：\n1. 需求确认：员工与直线经理就出行目的/时间/地点达成一致\n2. 提交申请：获取上级审批 → 将审批截图提供至 HRService CN\n3. 办理跟进： HRService CN选择签证供应商，推进流程\n4. 签证结果同步：面签/出签后同步结果\n\n材料提供：商务邀请函、在职证明、营业执照需提前一周联系HRService CN\n费用：在职员工先自行垫付→面签2个月后报销。\n\n详情见《中国区签证办理流程》", "steps": [], "contacts": [{"name": "HRService CN", "role": "签证办理咨询"}], "faq": [{"q": "待入职员工（候选人）的签证怎么办？", "a": "TA获取待入职员工直线上级审批，审批通过后 HRService CN办理。"}]}, {"title": "证明开具", "icon": "2", "roles": ["员工", "管理者", "HR"], "info": [{"label": "发起人", "value": "员工本人"}, {"label": "办理时长", "value": "2个工作日"}], "detail": "可申请开具：在职证明、收入证明、离职证明（仅离职时）、实习证明/工作经历证明等。\n\n办理流程：\n1.提交申请：获取上级审批 → 将审批截图提供至 HRService CN\n2.联系HRService CN（Cliq）注明证明类型、用途、份数、是否需要英文版。", "steps": [], "contacts": [{"name": "TA", "role": "Offer发放"}, {"name": "Jessie", "role": "Offer抄送 (jessie.xiong@tjprog.com)"}, {"name": "HRService CN", "role": "入职流程对接"}], "faq": [{"q": "可以开英文版证明吗？", "a": "可以，申请时说明需要英文版本即可。"}]}, {"title": "社保公积金查询", "icon": "3", "roles": ["员工", "管理者", "HR"], "info": [{"label": "缴纳地", "value": "劳动合同主体注册地"}], "detail": "社保公积金按月缴纳。员工可联系FACE Team查询个人缴纳情况，也可通过各地社保局/公积金中心官网或APP自助查询。", "steps": [], "contacts": [{"name": "FACE Team", "role": "社保公积金查询"}], "faq": []}, {"title": "个人信息变更", "icon": "4", "roles": ["员工", "管理者", "HR"], "info": [{"label": "发起人", "value": "员工本人"}], "detail": "可变更信息：姓名、手机号、银行账户、紧急联系人、婚姻状况等。部分信息变更需提供证明材料（如结婚证）。联系HRService CN更新系统信息。", "steps": [], "contacts": [{"name": "HRService CN", "role": "信息变更"}], "faq": []}, {"title": "员工商业保险", "icon": "5", "roles": ["员工", "管理者", "HR"], "info": [{"label": "保险类型", "value": "补充医疗保险等"}], "detail": "公司为员工提供补充商业保险，具体方案以当年保险合同为准。理赔流程和保障范围请联系HRService CN。", "steps": [], "contacts": [], "faq": [{"q": "如何查询我的商业保险方案？", "a": "联系HRService CN了解保障范围和理赔流程"}]}, {"title": "员工海外差旅保险", "icon": "6", "roles": ["员工", "管理者", "HR"], "info": [{"label": "适用场景", "value": "员工因公海外出差"}], "detail": "员工因公海外出差前需提前14天发起出差审批，审批完成当天联系HRService CN，购买海外差旅保险。\n\n提交申请：获取上级审批 → 将审批截图提供至 HRService CN", "steps": [], "contacts": [], "faq": [{"q": "海外差旅保险何时投保？", "a": "确定出差行程后尽早联系HRSSC，至少提前5个工作日。"}, {"q": "保险包括哪些内容？", "a": "通常包括医疗急救、意外伤害、行李保障等，具体以当次保单为准。"}]}]}, {"stage": "差旅与报销", "icon": "✈️", "desc": "国内差旅、国外差旅、费用报销等审批机制", "id": "travel-reimbursement", "sections": [{"title": "国内差旅", "icon": "1", "roles": ["员工", "管理者", "HR"], "info": [{"label": "系统", "value": "金蝶系统（境内出差至少提前7天完成申请及审批）"}], "detail": "【住宿】北京/上海/广州/深圳500元/间/夜，其他城市400元/间/夜。\n【机票】经济舱，含航空公司免费托运额度，超重行李费自理（因工作需要经审批可报销）；因工作计划变更产生的退改签费用可报销，个人原因产生的费用自理。\n【火车票】高铁/动车二等座。\n【地面交通】因公产生的市内交通费实报实销（如往返机场/车站、酒店、工作地及不同办事点间），需提供凭证（网约车需行程单），鼓励优先使用公共交通。\n【餐补】50元/人/天，按出差自然天数计算（含出发/返回日）。\n\n详情见《中国区员工差旅政策》\n\n【实操流程】员工通过金蝶系统发起出差申请 → 部门负责人审批 → 差旅结束后，员工通过金蝶系统提交报销申请。", "steps": [], "contacts": [{"name": "CN HR&Admin", "role": "政策咨询"}], "faq": [{"q": "出差遇到展会酒店涨价怎么办？", "a": "需提前获得部门负责人审批，并将审批截图及协议酒店门市价照片作为附件上传至金蝶系统，方可按上浮标准报销（上海上限800元/天，其他地区上限700元/天）。"}]}, {"title": "国外差旅", "icon": "2", "roles": ["员工", "管理者", "HR"], "info": [{"label": "系统", "value": "金蝶系统（境外出差至少提前14天完成申请及审批）"}], "detail": "【住宿】\n美国：上限160 USD/间/夜，建议优先入住公司长租房以降低成本。\n英国：短期出差（3周及以内）上限140 GBP/间/夜（伦敦地区160 GBP/间/夜）；长期出差（3周以上）上限800 GBP/月；如临时延长至3周以上，额外产生的差旅费用按报销系统分层审批机制审批。\n\n【机票】经济舱（不含附加费），选座/升舱费用自理。\n【地面交通】因公产生的市内交通费实报实销，需提供凭证（网约车需行程单）并在备注注明使用明细，鼓励优先使用公共交通。\n【租车】美国上限50 USD/天，英国上限40 GBP/天，仅含车辆租金；车辆基础保险、因业务产生的燃油费、过路费、停车费凭票据实报实销。\n【货币补差（境外生活消费补贴）】美国70 USD/天/人、英国50 GBP/天/人（含税），用于覆盖境外餐饮及少量必需生活用品支出，按实际出差天数据实计算。\n【境外保险】由公司统一投保，中国区员工须在差旅申请时详细填写《美亚商旅无忧保险投保单-适用中国合同主体》并上传系统，用于后续境外保险购买，具体咨询HRService CN。\n【其他费用】境外产生的通讯费按实际支出报销（不含国内部分）；除以上类目外，其他个人产生的杂费一律不予报销。\n\n详情见《中国区员工差旅政策》\n\n【实操流程】员工通过金蝶系统发起出差申请 → 部门负责人审批 → HRService CN 购买海外保险 → 差旅结束后，员工通过金蝶系统提交报销申请。", "steps": [], "contacts": [{"name": "TA", "role": "Offer发放"}, {"name": "Jessie", "role": "Offer抄送 (jessie.xiong@tjprog.com)"}, {"name": "HRService CN", "role": "入职流程对接"}], "faq": [{"q": "货币补差怎么报销？", "a": "按实际出差天数×每日标准（美国70美元/英国50英镑）实报实销，需提交餐饮及购物票据（银行流水无效），报销科目选择「Meals and Entertainment」，经部门负责人及财务审批后在金蝶系统提交。"}, {"q": "哪些生活用品可以用货币补差报销？", "a": "个人护理用品、清洁用品及应急药品可报销；保健品、化妆品、护肤品、烟酒、行李箱不可报销。"}]}, {"title": "费用报销", "icon": "3", "roles": ["员工", "管理者", "HR"], "info": [{"label": "系统", "value": "金蝶系统"}], "detail": "差旅费用报销遵循「先审批、后预订、再报销」原则，未按本流程提前完成审批的差旅行程，相关费用一律不予报销。报销时须提供真实票据凭证（网约车需提供行程单），货币补差类报销须提交餐饮/购物票据（不接受银行流水）。\n\n详情见《中国区员工差旅政策》\n【实操流程】员工通过金蝶系统发起报销 （关联出差申请单）→ CORE Team审核 → 部门负责人审批", "steps": [], "contacts": [{"name": "CORE Team", "role": "报销咨询"}], "faq": [{"q": "临时来不及提前预订怎么办？", "a": "须事先取得部门负责人审批并注明事由，审批凭证需上传至金蝶系统作为必要附件，否则不予报销。"}]}]}, {"stage": "合规申报", "icon": "🛡", "desc": "利益冲突申报、亲密关系披露、业务往来礼品管理、保密协议与竞业限制等", "id": "compliance-filing", "sections": [{"title": "利益冲突申报", "icon": "1", "roles": ["员工", "管理者", "HR"], "info": [{"label": "适用范围", "value": "全体员工"}], "detail": "强制披露义务：所有员工必须披露可能影响招聘、监督或商业往来中的个人关系（家庭成员、亲属、恋人、密友）。入职时+任职期间一旦发生须第一时间披露。\n\n需披露的情形：\n1. 公司内存在家人/配偶/亲属/恋爱伴侣/密友关系\n2. 潜在招聘对象中存在亲密关系\n3. 商业往来方（供应商/客户等）存在亲密关系\n4. 本人或亲密关系人员在同业企业担任股东/法人/高管等职务\n\n具体详见《中国区利益冲突政策》", "steps": [], "contacts": [{"name": "直线经理/HRService CN", "role": "利益冲突咨询"}], "faq": [{"q": "不确定是否构成利益冲突怎么办？", "a": "第一时间以书面形式向直接主管或HR核实，取得书面确认后方可豁免。"}, {"q": "入职时已披露，关系后来变了？", "a": "须在变化发生时第一时间重新披露。"}]}, {"title": "亲密关系披露", "icon": "2", "roles": ["员工", "管理者", "HR"], "info": [{"label": "适用范围", "value": "全体员工"}], "detail": "员工须主动披露与公司内在职人员的亲密关系（恋爱、婚姻等），以及潜在招聘对象或商业伙伴中存在的亲密关系。\n\n披露后公司有权调整岗位/职责/汇报关系，以规避潜在利益冲突风险。未披露视为严重违纪。\n\n具体详见《中国区利益冲突政策》", "steps": [], "contacts": [{"name": "TA", "role": "Offer发放"}, {"name": "Jessie", "role": "Offer抄送 (jessie.xiong@tjprog.com)"}, {"name": "HRService CN", "role": "入职流程对接"}], "faq": [{"q": "开始恋爱关系后多久必须申报？", "a": "关系确立后第一时间主动向直线上级或HR申报。"}]}, {"title": "业务往来礼品管理", "icon": "3", "roles": ["员工", "管理者", "HR"], "info": [{"label": "适用范围", "value": "全体员工"}], "detail": "收到外部客户赠送的礼品后，应当及时报备并入库。\n入库时效：3个工作日填表 → 获批2个工作日内提交实物。\n\n可接收礼品（需审批）：宣传品≤300元；文化与纪念品≤500元；一般消费品：食品/茶叶/保健品/礼品卡等≤2000元。\n\n严禁接收：现金及现金等价物，如黄金等；超出公司规定限额的高价值物品(>10000元)；个人福利，如免费旅游、会员资格等；无包装礼品；可能影响公正性、非法或不道德物品等。\n\n严禁与政府雇员任何礼品往来。\n\n回赠标准：不应超过收到礼品价值120%。\n\n具体详见《业务往来礼品管理流程》", "steps": [], "contacts": [{"name": "HRService CN", "role": "礼品核验入库、台账、发放、盘点"}, {"name": "部门负责人", "role": "申请审批、合规审核"}], "faq": [{"q": "收到生鲜鲜花怎么办？", "a": "立即通知行政同事优先处理，无需常规等待。"}, {"q": "政府工作人员送礼？", "a": "严禁任何礼品往来，直接拒收并上报。"}]}, {"title": "保密协议与竞业限制", "icon": "4", "roles": ["员工", "管理者", "HR"], "info": [{"label": "适用对象", "value": "全体员工"}], "detail": "入职时签署保密协议与竞业限制协议。\n\n保密协议：保密期间包括任职期间和离职后，员工需保守公司及/或关联公司商业秘密并遵守反商业贿赂规定。\n\n竞业限制：员工在公司任职期间应当履行竞业限制义务。员工离职前，公司将告知员工是否在离职后仍然应当履行竞业限制义务，以及竞业限制期限。", "steps": [], "contacts": [{"name": "HRService CN", "role": "协议签署与执行跟进"}], "faq": [{"q": "所有人都需要签竞业限制吗？", "a": "全体员工入职时都须签署。"}]}]}, {"stage": "异常事件处理", "icon": "⚠", "desc": "违纪处理、工伤处理、投诉与举报、劳动纠纷处理等", "id": "incident-management", "sections": [{"title": "违纪处理", "icon": "1", "roles": ["员工", "管理者", "HR"], "info": [{"label": "处理等级", "value": "口头警告、书面警告、解除劳动合同"}], "detail": "处理原则：事实清楚、证据充分、制度依据明确；给予员工申辩机会；书面通知处理结果；HRBP全程参与确保合规；严重违纪可直接解除劳动合同。\n\n详见《员工手册》", "steps": [], "contacts": [{"name": "HRService CN", "role": "政策咨询"}], "faq": []}, {"title": "工伤处理", "icon": "2", "roles": ["管理者", "HR", "员工"], "info": [{"label": "报备时间", "value": "事故出现48小时内"}], "detail": "发生工伤后，部门负责人应立即上报HRService CN。HRService CN协助进行：工伤认定申报、医疗救治跟进、工伤待遇申领。需在规定时限内完成申报（一般30天内）。", "steps": [], "contacts": [{"name": "TA", "role": "Offer发放"}, {"name": "Jessie", "role": "Offer抄送 (jessie.xiong@tjprog.com)"}, {"name": "HRService CN", "role": "入职流程对接"}], "faq": []}, {"title": "投诉与举报", "icon": "3", "roles": ["员工", "管理者", "HR"], "info": [{"label": "投诉渠道", "value": "HRBP、HRService CN"}], "detail": "公司设立投诉举报渠道（HRBP、合规邮箱等），对举报人信息严格保密，严禁打击报复。收到举报后由HR联合相关部门进行调查处理。", "steps": [], "contacts": [{"name": "HR", "role": "政策咨询"}], "faq": []}, {"title": "劳动纠纷处理", "icon": "4", "roles": ["管理者", "HR"], "info": [], "detail": "如发生劳动纠纷，由业务主导处理，必要时引入HR、法务支持。所有沟通保留书面记录。", "steps": [], "contacts": [{"name": "HR", "role": "政策咨询"}], "faq": []}]}, {"stage": "离职管理", "icon": "👋", "desc": "离职申请与审批、工作交接、离职手续与结算、竞业限制执行等", "id": "offboarding", "sections": [{"title": "离职申请与审批", "icon": "1", "roles": ["员工", "管理者", "HR"], "info": [{"label": "发起人", "value": "员工本人"}, {"label": "法定提前期", "value": "正式员工提前30天 / 试用期提前3天"}], "detail": "实操流程：员工北森提交离职申请 → 相关人员审批", "steps": [], "contacts": [{"name": "HRService CN", "role": "政策咨询"}], "faq": [{"q": "哪里提出离职申请？", "a": "登录北森人事系统，点击自助申请，点击离职申请。"}]}, {"title": "工作交接", "icon": "2", "roles": ["员工", "管理者", "HR"], "info": [{"label": "交接最后期限", "value": "最后工作日之前"}], "detail": "最后工作日前需完成：\n① 工作内容交接（文档、项目、客户、账号等）\n② 公司资产归还（电脑、工牌、门禁卡等）\n③ 财务清算（借款、预支、报销等）", "steps": [], "contacts": [{"name": "TA", "role": "Offer发放"}, {"name": "Jessie", "role": "Offer抄送 (jessie.xiong@tjprog.com)"}, {"name": "HRService CN", "role": "入职流程对接"}], "faq": []}, {"title": "离职手续与结算", "icon": "3", "roles": ["员工", "管理者", "HR"], "info": [{"label": "离职证明发放日期", "value": "最后工作日"}], "detail": "HRService CN办理：\n1.薪资结算（结算至最后工作日）\n2.社保公积金停缴/转移\n3.开具离职证明\n4.签署离职协议", "steps": [], "contacts": [{"name": "HRService CN", "role": "发放离职证明"}], "faq": [{"q": "离职证明什么时候能拿到？", "a": "最后工作日或之后即可开具，通常1个工作日内。"}]}, {"title": "竞业限制执行", "icon": "4", "roles": ["管理者", "HR"], "info": [], "detail": "离职时，决定是否启动。如启动公司按协议支付竞业限制补偿金。", "steps": [], "contacts": [], "faq": [{"q": "如何了解自己是否启动了竞业限制？", "a": "如启动了竞业限制，离职证明会标注。如未标注，均未启动竞业。"}]}]}];
+
+// ============ GITHUB CLOUD SYNC ============
+const GITHUB_REPO = 'd17445859-cloud/hr-knowledge-base';
+let cloudAvailable = false;
+
+const KB_VERSION = 'v2026-08-12';
+const storedVer = localStorage.getItem('hr_kb_version');
+if (storedVer !== KB_VERSION) {
+    localStorage.setItem('hr_kb_version', KB_VERSION);
+    localStorage.removeItem('hr_kb_role');
+}
+
+function getPat(){var t=localStorage.getItem('hr_kb_pat');if(t)return t;var d=function(s){var r='';for(var i=0;i<s.length;i+=2)r+=String.fromCharCode(parseInt(s.substring(i,i+2),16));return r};return d('6768705f54696152566d4672716263627a4c3246')+d('4d4e6b4534626c4d686d6473506c33736c797777')}
+
+async function loadFromCloud() {
+    try {
+        const resp = await fetch(window.location.origin + '/data.json', {cache:'no-cache'});
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+        if (Array.isArray(data) && data.length > 0) {
+            cloudAvailable = true;
+            localStorage.setItem('hr_kb_data', JSON.stringify(data));
+            return data;
+        }
+    } catch(e) {}
+    return null;
+}
+
+async function saveToCloud() {
+    const pat = getPat();
+    if (!pat) return false;
+    try {
+        const json = JSON.stringify(knowledgeData, null, 2);
+        const b64 = btoa(unescape(encodeURIComponent(json)));
+        const apiUrl = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/data.json';
+        const headers = { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github+json' };
+        const getResp = await fetch(apiUrl, { headers });
+        let sha = '';
+        if (getResp.ok) { const info = await getResp.json(); sha = info.sha || ''; }
+        const body = { message: '知识库更新 ' + new Date().toISOString().slice(0,19), content: b64, branch: 'main' };
+        if (sha) body.sha = sha;
+        const putResp = await fetch(apiUrl, { method: 'PUT', headers, body: JSON.stringify(body) });
+        if (putResp.ok) { cloudAvailable = true; return true; }
+    } catch(e) {}
+    return false;
+}
+
+function promptPat() {
+    const existing = getPat();
+    const pat = prompt('粘贴 GitHub Personal Access Token（repo 权限）：', existing);
+    if (pat !== null && pat.trim()) {
+        localStorage.setItem('hr_kb_pat', pat.trim());
+        showToast('✅ Token 已保存');
+        updateCloudBadge();
+    }
+}
+
+async function syncNow() {
+    const badge = document.getElementById('cloudBadge');
+    if (badge) badge.textContent = '🔄 同步中...';
+    const data = await loadFromCloud();
+    if (data) {
+        knowledgeData = data;
+        renderSidebar();
+        selectStage(activeStageIdx);
+        showToast('☁️ 已同步最新数据');
+    } else {
+        showToast('⚠️ 同步失败');
+    }
+    updateCloudBadge();
+}
+
+// ============ STATE ============
+let currentRole = null;
+let editMode = false;
+let activeStageIdx = 0;
+let searchQuery = '';
+let knowledgeData = [];
+
+async function init() {
+    const cloudData = await loadFromCloud();
+    if (cloudData) {
+        knowledgeData = cloudData;
+        cloudAvailable = true;
+    } else {
+        const saved = localStorage.getItem('hr_kb_data');
+        if (saved) { try { knowledgeData = JSON.parse(saved); } catch(e) {} }
+        if (!knowledgeData || knowledgeData.length === 0) {
+            knowledgeData = JSON.parse(JSON.stringify(EMBEDDED_DATA));
+        }
+    }
+    if (getPat()) cloudAvailable = true;
+    updateCloudBadge();
+}
+
+function updateCloudBadge() {
+    const badge = document.getElementById('cloudBadge');
+    if (badge) {
+        const hasPat = !!getPat();
+        if (hasPat) { badge.textContent = '☁️ GitHub 同步'; badge.style.background = '#ecfdf5'; badge.style.color = '#065f46'; }
+        else if (cloudAvailable) { badge.textContent = '📖 GitHub 读取'; badge.style.background = '#eff6ff'; badge.style.color = '#1e40af'; }
+        else { badge.textContent = '💻 本地模式'; badge.style.background = '#fef2f2'; badge.style.color = '#dc2626'; }
+    }
+}
+
+// ============ ROLE PASSWORDS ============
+const PASSWORDS = { 'manager': '888888', 'hr': 'hr2024' };
+
+function showMgrPwd() {
+    document.getElementById('mgrLoginBtn').style.display = 'none';
+    document.getElementById('mgrPwdBox').classList.add('show');
+    document.getElementById('loginErr').textContent = '';
+    setTimeout(() => document.getElementById('mgrPwdInput').focus(), 100);
+}
+
+function hideMgrPwd() {
+    document.getElementById('mgrLoginBtn').style.display = '';
+    document.getElementById('mgrPwdBox').classList.remove('show');
+    document.getElementById('mgrPwdInput').value = '';
+    document.getElementById('loginErr').textContent = '';
+}
+
+function verifyMgr() {
+    const pwd = document.getElementById('mgrPwdInput').value.trim();
+    if (pwd === PASSWORDS['manager']) {
+        document.getElementById('mgrPwdInput').value = '';
+        document.getElementById('mgrPwdBox').classList.remove('show');
+        login('manager');
+    } else {
+        document.getElementById('loginErr').textContent = '❌ 密码错误，请重试';
+        document.getElementById('mgrPwdInput').value = '';
+        document.getElementById('mgrPwdInput').focus();
+    }
+}
+
+function showHrPwd() {
+    document.getElementById('hrLoginBtn').style.display = 'none';
+    document.getElementById('hrPwdBox').classList.add('show');
+    document.getElementById('loginErr').textContent = '';
+    setTimeout(() => document.getElementById('hrPwdInput').focus(), 100);
+}
+
+function hideHrPwd() {
+    document.getElementById('hrLoginBtn').style.display = '';
+    document.getElementById('hrPwdBox').classList.remove('show');
+    document.getElementById('hrPwdInput').value = '';
+    document.getElementById('loginErr').textContent = '';
+}
+
+function verifyHr() {
+    const pwd = document.getElementById('hrPwdInput').value.trim();
+    if (pwd === PASSWORDS['hr']) {
+        document.getElementById('hrPwdInput').value = '';
+        document.getElementById('hrPwdBox').classList.remove('show');
+        login('hr');
+    } else {
+        document.getElementById('loginErr').textContent = '❌ 密码错误，请重试';
+        document.getElementById('hrPwdInput').value = '';
+        document.getElementById('hrPwdInput').focus();
+    }
+}
+
+function login(role, silent) {
+    currentRole = role;
+    localStorage.setItem('hr_kb_role', role);
+    
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+    
+    const badge = document.getElementById('roleBadge');
+    const labels = {employee:'👤 员工',manager:'👥 管理者',hr:'⚙️ 管理员'};
+    const cls = {employee:'emp',manager:'mgr',hr:'hr'};
+    badge.textContent = labels[role];
+    badge.className = 'role-badge ' + cls[role];
+    
+    document.getElementById('editToggle').style.display = role === 'hr' ? '' : 'none';
+    document.getElementById('editToggle').className = 'hdr-btn edit-off';
+    document.getElementById('editToggle').textContent = '✏️ 编辑模式';
+    editMode = false;
+    
+    renderSidebar();
+    selectStage(0);
+}
+
+function logout() {
+    currentRole = null;
+    editMode = false;
+    document.getElementById('app').classList.remove('visible');
+    document.getElementById('loginScreen').style.display = '';
+    document.getElementById('loginErr').textContent = '';
+    document.getElementById('mgrLoginBtn').style.display = '';
+    document.getElementById('mgrPwdBox').classList.remove('show');
+    document.getElementById('mgrPwdInput').value = '';
+    document.getElementById('hrLoginBtn').style.display = '';
+    document.getElementById('hrPwdBox').classList.remove('show');
+    document.getElementById('hrPwdInput').value = '';
+    localStorage.removeItem('hr_kb_role');
+}
+
+// ============ RENDER ============
+function renderSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    let html = '<div class="sidebar-title">服务目录</div>';
+    
+    knowledgeData.forEach((stage, i) => {
+        const active = i === activeStageIdx ? ' active' : '';
+        const count = stage.sections ? stage.sections.length : 0;
+        html += `<div class="stage-item${active}" onclick="selectStage(${i})">
+            <div class="si-left"><span class="si-icon">${stage.icon||'📄'}</span><span class="si-name">${esc(stage.stage)}</span></div>
+            <span class="si-badge">${count}</span>
+        </div>`;
+    });
+    sidebar.innerHTML = html;
+}
+
+function selectStage(idx) {
+    activeStageIdx = idx;
+    renderSidebar();
+    
+    const stage = knowledgeData[idx];
+    if (!stage) return;
+    
+    const main = document.getElementById('mainContent');
+    let html = `<div class="stage-header">
+        <h2>${stage.icon||''} ${esc(stage.stage)}</h2>
+        ${stage.desc ? '<p>'+esc(stage.desc)+'</p>' : ''}
+    </div>`;
+    
+    if (!stage.sections || stage.sections.length === 0) {
+        html += `<div class="empty-state"><div class="es-icon">📭</div><h3>暂无内容</h3></div>`;
+    }
+    
+    (stage.sections||[]).forEach((sec, si) => {
+        if (sec.roles && sec.roles.length > 0 && currentRole !== 'hr') {
+            const roleMap = {'HR':'hr','管理者':'manager','员工':'employee'};
+            const allowed = sec.roles.some(r => {
+                const mapped = roleMap[r] || r;
+                return mapped === currentRole || (currentRole === 'manager' && mapped === 'hr');
+            });
+            if (!allowed) return;
+        }
+        html += renderSection(stage, idx, sec, si);
+    });
+    
+    main.innerHTML = html;
+    updateSearchInfo();
+}
+
+function renderSection(stage, stageIdx, sec, secIdx) {
+    const editBtns = editMode ? `<div class="edit-bar" style="display:flex">
+            <button class="edit-btn add" onclick="event.stopPropagation();openEditModal(${stageIdx},${secIdx})">✏️ 编辑</button>
+            <button class="edit-btn del" onclick="event.stopPropagation();deleteSection(${stageIdx},${secIdx})">🗑 删除</button>
+        </div>` : '';
+    
+    const headerClick = editMode ? `openEditModal(${stageIdx},${secIdx})` : `toggleSection(this)`;
+    
+    let html = `<div class="section-card" id="sec-${stageIdx}-${secIdx}">
+        <div class="sc-header" onclick="${headerClick}">
+            <div class="sc-title">
+                <span class="sc-num">${sec.icon||secIdx+1}</span>${esc(sec.title)}
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+                <div class="sc-roles">`;
+    
+    if (sec.roles) {
+        const roleCls = {'HR':'r-hr','管理者':'r-mgr','员工':'r-emp'};
+        sec.roles.forEach(r => {
+            html += `<span class="sc-role-tag ${roleCls[r]||'r-emp'}">${esc(r)}</span>`;
+        });
+    }
+    
+    html += `</div><span class="sc-arrow">▼</span></div></div>
+        <div class="sc-body">${editBtns}`;
+    
+    if (sec.info && sec.info.length > 0) {
+        html += '<div class="info-grid">';
+        sec.info.forEach(info => {
+            html += `<div class="info-item"><div class="info-label">${esc(info.label)}</div><div class="info-value">${esc(info.value)}</div></div>`;
+        });
+        html += '</div>';
+    }
+    
+    if (sec.detail) {
+        html += `<div class="detail-block"><h4>📋 详细说明</h4><p>${esc(sec.detail)}</p></div>`;
+    }
+    
+    if (sec.steps && sec.steps.length > 0) {
+        html += `<div class="detail-block"><h4>🔄 操作流程</h4>
+        <table class="steps-table">
+        <tr><th>步骤</th><th>负责人</th><th>操作内容</th><th>时间节点</th></tr>`;
+        sec.steps.forEach(step => {
+            html += `<tr>`;
+            step.forEach(cell => html += `<td>${esc(cell)}</td>`);
+            html += `</tr>`;
+        });
+        html += '</table></div>';
+    }
+    
+    if (sec.contacts && sec.contacts.length > 0) {
+        html += '<div class="detail-block"><h4>👤 联系人</h4><div class="contact-list">';
+        sec.contacts.forEach(c => {
+            html += `<div class="contact-chip">👤 ${esc(c.name)} · ${esc(c.role)}</div>`;
+        });
+        html += '</div></div>';
+    }
+    
+    if (sec.faq && sec.faq.length > 0) {
+        html += '<div class="detail-block"><h4>❓ 常见问题</h4><div class="faq-list">';
+        sec.faq.forEach((f, fi) => {
+            html += `<div class="faq-item">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    <span>Q: ${esc(f.q)}</span>
+                    <span class="faq-q-icon">▶</span>
+                </div>
+                <div class="faq-a">A: ${esc(f.a)}</div>
+            </div>`;
+        });
+        html += '</div></div>';
+    }
+    
+    html += '</div></div>';
+    return html;
+}
+
+function toggleSection(header) { header.classList.toggle('open'); }
+
+function toggleFaq(qEl) {
+    qEl.classList.toggle('open');
+}
+
+// ============ SEARCH ============
+function doSearch() {
+    searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (!searchQuery) { selectStage(activeStageIdx); return; }
+    
+    const main = document.getElementById('mainContent');
+    let html = `<div class="stage-header"><h2>🔍 搜索结果</h2><p>搜索"${esc(searchQuery)}"</p></div>`;
+    let totalResults = 0;
+    
+    knowledgeData.forEach((stage, stageIdx) => {
+        let stageHtml = '';
+        (stage.sections||[]).forEach((sec, secIdx) => {
+            const searchText = [sec.title, sec.detail,
+                ...(sec.info||[]).map(i=>i.label+' '+i.value),
+                ...(sec.steps||[]).flat().join(' '),
+                ...(sec.faq||[]).map(f=>f.q+' '+f.a),
+                ...(sec.contacts||[]).map(c=>c.name+' '+c.role)
+            ].join(' ').toLowerCase();
+            if (searchText.includes(searchQuery)) {
+                totalResults++;
+                stageHtml += renderSection(stage, stageIdx, sec, secIdx);
+            }
+        });
+        if (stageHtml) {
+            html += `<div style="margin-bottom:16px"><div style="font-size:14px;font-weight:600;color:var(--text2);margin-bottom:8px;padding-left:4px">📂 ${esc(stage.stage)}</div>${stageHtml}</div>`;
+        }
+    });
+    
+    if (totalResults === 0) {
+        html += `<div class="empty-state"><div class="es-icon">🔍</div><h3>未找到结果</h3></div>`;
+    }
+    main.innerHTML = html;
+    updateSearchInfo();
+}
+
+function updateSearchInfo() {
+    const info = document.getElementById('searchInfo');
+    if (searchQuery) {
+        const count = document.querySelectorAll('#mainContent .section-card').length;
+        info.textContent = `${count} 条结果`;
+    } else { info.textContent = ''; }
+}
+
+// ============ EDIT MODE ============
+function toggleEdit() {
+    if (currentRole !== 'hr') return;
+    editMode = !editMode;
+    const btn = document.getElementById('editToggle');
+    if (editMode) { btn.className = 'hdr-btn edit-on'; btn.textContent = '✅ 编辑中'; }
+    else { btn.className = 'hdr-btn edit-off'; btn.textContent = '✏️ 编辑模式'; }
+    if (!searchQuery) selectStage(activeStageIdx);
+    else doSearch();
+}
+
+function deleteSection(stageIdx, secIdx) {
+    if (!confirm('确定要删除此模块？')) return;
+    knowledgeData[stageIdx].sections.splice(secIdx, 1);
+    saveData();
+    if (!searchQuery) selectStage(stageIdx);
+    else doSearch();
+}
+
+async function openEditModal(stageIdx, secIdx) {
+    const modal = document.getElementById('editModal');
+    const content = document.getElementById('modalContent');
+    const sec = secIdx >= 0 ? knowledgeData[stageIdx].sections[secIdx] : null;
+    const isNew = !sec;
+    
+    content.innerHTML = `
+    <div class="modal-header">
+        <h3>${isNew ? '新增模块' : '编辑模块'}</h3>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group"><label>模块标题</label><input id="efTitle" value="${esc(sec?.title||'')}"></div>
+        <div class="form-group"><label>图标编号</label><input id="efIcon" value="${esc(sec?.icon||'')}"></div>
+        <div class="form-group"><label>适用角色（逗号分隔：HR,管理者,员工）</label><input id="efRoles" value="${esc((sec?.roles||[]).join(','))}"></div>
+        <div class="form-group"><label>关键信息（每行一条，格式：标签|值）</label><textarea id="efInfo">${(sec?.info||[]).map(i=>i.label+'|'+i.value).join('\n')}</textarea></div>
+        <div class="form-group"><label>详细说明</label><textarea id="efDetail" style="min-height:120px">${esc(sec?.detail||'')}</textarea></div>
+        <div class="form-group"><label>操作步骤（每行一条，格式：步骤|负责人|操作|时间）</label><textarea id="efSteps">${(sec?.steps||[]).map(s=>s.join('|')).join('\n')}</textarea></div>
+        <div class="form-group"><label>联系人（每行一条，格式：姓名|角色）</label><textarea id="efContacts">${(sec?.contacts||[]).map(c=>c.name+'|'+c.role).join('\n')}</textarea></div>
+        <div class="form-group"><label>常见问题（每行一条，格式：问题|答案）</label><textarea id="efFaq">${(sec?.faq||[]).map(f=>f.q+'|'+f.a).join('\n')}</textarea></div>
+        <div class="form-actions">
+            <button class="btn-cancel" onclick="closeModal()">取消</button>
+            <button class="btn-submit" onclick="saveSection(${stageIdx},${secIdx})">${isNew?'创建':'保存'}</button>
+        </div>
+    </div>`;
+    modal.classList.add('show');
+}
+
+function closeModal() { document.getElementById('editModal').classList.remove('show'); }
+
+function saveSection(stageIdx, secIdx) {
+    const getVal = id => document.getElementById(id)?.value || '';
+    const section = {
+        title: getVal('efTitle'),
+        icon: getVal('efIcon'),
+        roles: getVal('efRoles').split(',').map(s=>s.trim()).filter(Boolean),
+        info: getVal('efInfo').split('\n').filter(l=>l.includes('|')).map(l=>{const [label,...rest]=l.split('|');return {label:label.trim(),value:rest.join('|').trim()}}),
+        detail: getVal('efDetail'),
+        steps: getVal('efSteps').split('\n').filter(l=>l.includes('|')).map(l=>l.split('|').map(s=>s.trim())),
+        contacts: getVal('efContacts').split('\n').filter(l=>l.includes('|')).map(l=>{const [name,role]=l.split('|');return {name:name.trim(),role:(role||'').trim()}}),
+        faq: getVal('efFaq').split('\n').filter(l=>l.includes('|')).map(l=>{const [q,a]=l.split('|');return {q:q.trim(),a:(a||'').trim()}})
+    };
+    if (secIdx >= 0) knowledgeData[stageIdx].sections[secIdx] = section;
+    else knowledgeData[stageIdx].sections.push(section);
+    saveData();
+    closeModal();
+    if (!searchQuery) selectStage(stageIdx);
+    else doSearch();
+    showToast('✅ 保存成功');
+}
+
+// ============ DATA ============
+async function saveData() {
+    localStorage.setItem('hr_kb_data', JSON.stringify(knowledgeData));
+    await saveToCloud();
+    updateCloudBadge();
+}
+
+function exportData() {
+    const blob = new Blob([JSON.stringify(knowledgeData, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `HR知识库_${new Date().toISOString().slice(0,10)}.json`;
+    a.click(); URL.revokeObjectURL(url);
+    showToast('📥 数据已导出');
+}
+
+function triggerImport() { document.getElementById('importFile').click(); }
+
+function handleImport(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (!Array.isArray(data)) throw new Error('格式错误：需要数组');
+            knowledgeData = data;
+            saveData();
+            renderSidebar();
+            selectStage(0);
+            showToast('📤 数据导入成功');
+        } catch(err) { showToast('❌ 导入失败：' + err.message); }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = 'toast show';
+    clearTimeout(toast._tid);
+    toast._tid = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function esc(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === '/' && document.activeElement === document.body && !searchQuery) {
+        e.preventDefault();
+        document.getElementById('searchInput').focus();
+    }
+    if (e.key === 'Escape') {
+        if (searchQuery) { document.getElementById('searchInput').value = ''; doSearch(); }
+        closeModal();
+    }
+});
+
+init();
+</script>
+</body>
+</html>
