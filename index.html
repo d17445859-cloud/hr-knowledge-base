@@ -261,11 +261,11 @@ const EMBEDDED_DATA = [{"stage": "预入职管理", "icon": "📥", "desc": "候
 const GITHUB_REPO = 'd17445859-cloud/hr-knowledge-base';
 let cloudAvailable = false;
 
-const KB_VERSION = 'v2026-08-12';
+const KB_VERSION = 'v20260812-final';
 const storedVer = localStorage.getItem('hr_kb_version');
 if (storedVer !== KB_VERSION) {
     localStorage.setItem('hr_kb_version', KB_VERSION);
-    localStorage.removeItem('hr_kb_role');
+    localStorage.clear();
 }
 
 function getPat(){var t=localStorage.getItem('hr_kb_pat');if(t)return t;var d=function(s){var r='';for(var i=0;i<s.length;i+=2)r+=String.fromCharCode(parseInt(s.substring(i,i+2),16));return r};return d('6768705f54696152566d4672716263627a4c3246')+d('4d4e6b4534626c4d686d6473506c33736c797777')}
@@ -452,7 +452,7 @@ function logout() {
     document.getElementById('hrLoginBtn').style.display = '';
     document.getElementById('hrPwdBox').classList.remove('show');
     document.getElementById('hrPwdInput').value = '';
-    localStorage.removeItem('hr_kb_role');
+    localStorage.clear();
 }
 
 // ============ RENDER ============
