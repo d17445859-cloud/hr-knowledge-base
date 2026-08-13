@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)https://ad1c1d7211f9690e4.gz2.agentos-app.net/ -->
-<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>HR服务指南 · 知识库</title>
-<meta property="og:title" content="HR服务指南 · 知识库">
-<meta property="og:description" content="覆盖从入职到离职全流程，13个阶段 · 48个服务模块，随时查看、在线更新。">
-<meta property="og:url" content="https://d17445859-cloud.github.io/hr-knowledge-base/">
+<meta property="og:title" content="HR服务指南 · 知识库 | cnhrservice.tech">
+<meta property="og:description" content="覆盖从入职到离职全流程，13个阶段 · 48个服务模块。员工/管理者/管理员三角色权限，支持在线编辑、即时同步、跨设备访问。">
+<meta property="og:url" content="https://cnhrservice.tech">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://img.icons8.com/color/96/knowledge-sharing.png">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://cnhrservice.tech/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="HR服务指南">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="HR服务指南知识库 - 13阶段48模块，覆盖入职到离职全流程">
 <style>
 :root{--bg:#f0f4f8;--card:#fff;--primary:#2563eb;--primary-light:#eff6ff;--text:#1e293b;--text2:#64748b;--text3:#94a3b8;--border:#e2e8f0;--danger:#ef4444;--warn:#f59e0b;--green:#10b981;--radius:12px;--shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04)}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -188,28 +192,7 @@ body{overflow:visible;height:auto;background:#fff}
 .info-grid{grid-template-columns:1fr}
 }
 </style>
-<script src="./index_files/beacon_web.min.js.下载"></script>
-<script>
-(function(){
-  try{
-    var beacon=new BeaconAction({
-      appkey:'0WEB06U85YBSLJNL',
-      versionCode:'1.0.0',
-      channelID:'share',
-      delay:1000,
-      sessionDuration:30*60*1000,
-      isOversea:false,
-      needReportRqdEvent:false
-    });
-    beacon.onDirectUserAction('preview_page_view',{
-      'url':location.href,
-      'referrer':document.referrer,
-      'title':document.title,
-      'sandbox_id':'9d6665004d3542c8a5f5d4d5bd1873b9'
-    });
-  }catch(e){}
-})();
-</script></head>
+</head>
 <body>
 
 <div class="login-screen" id="loginScreen">
@@ -217,7 +200,7 @@ body{overflow:visible;height:auto;background:#fff}
 <div class="logo-icon">📚</div>
 <h1>HR服务指南 · 知识库</h1>
 <p class="sub">选择您的角色以查看相应内容</p>
-<button class="role-btn" onclick="login(&#39;employee&#39;)">
+<button class="role-btn" onclick="login('employee')">
 <span class="rb-icon">👤</span><span class="rb-name">我是员工</span>
 <span class="rb-hint">查看考勤、休假、薪酬、差旅等服务指南</span>
 </button>
@@ -230,12 +213,12 @@ body{overflow:visible;height:auto;background:#fff}
 <span class="rb-hint">完整权限：查看、编辑、导入导出知识库（需密码）</span>
 </button>
 <div class="pwd-box" id="mgrPwdBox">
-<input type="password" id="mgrPwdInput" placeholder="请输入管理者验证码" onkeydown="if(event.key===&#39;Enter&#39;)verifyMgr()">
+<input type="password" id="mgrPwdInput" placeholder="请输入管理者验证码" onkeydown="if(event.key==='Enter')verifyMgr()">
 <button class="pwd-submit" onclick="verifyMgr()">确认登录</button>
 <button class="pwd-cancel" onclick="hideMgrPwd()">取消</button>
 </div>
 <div class="pwd-box" id="hrPwdBox">
-<input type="password" id="hrPwdInput" placeholder="请输入管理员密码" onkeydown="if(event.key===&#39;Enter&#39;)verifyHr()">
+<input type="password" id="hrPwdInput" placeholder="请输入管理员密码" onkeydown="if(event.key==='Enter')verifyHr()">
 <button class="pwd-submit" onclick="verifyHr()">确认登录</button>
 <button class="pwd-cancel" onclick="hideHrPwd()">取消</button>
 </div>
@@ -247,7 +230,7 @@ body{overflow:visible;height:auto;background:#fff}
 <header class="app-header">
 <div class="app-logo"><span class="lo-icon">📚</span>HR服务指南</div>
 <span class="role-badge" id="roleBadge"></span>
-<span class="cloud-badge" id="cloudBadge" style="cursor: pointer; background: rgb(236, 253, 245); color: rgb(6, 95, 70);" onclick="syncNow()" title="点击手动同步">☁️ GitHub 同步</span>
+<span class="cloud-badge" id="cloudBadge" style="cursor:pointer" onclick="syncNow()" title="点击手动同步">🔄 加载中...</span>
 <div class="search-box">
 <span class="s-icon">🔍</span>
 <input type="text" id="searchInput" placeholder="搜索服务指南..." oninput="doSearch()">
@@ -783,5 +766,5 @@ document.addEventListener('keydown', function(e) {
 
 init();
 </script>
-
-</body></html>
+</body>
+</html>
