@@ -1858,11 +1858,11 @@
         "steps": [],
         "contacts": [
           {
-            "name": "直接经理",
+            "name": "直接上级",
             "role": "工作交接"
           },
           {
-            "name": "Queena Wang",
+            "name": "Admin",
             "role": "门禁清除、资产归还"
           },
           {
