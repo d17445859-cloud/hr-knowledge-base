@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0046)https://ad1c1d7211f9690e4.gz2.agentos-app.net/ -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -188,7 +188,28 @@ body{overflow:visible;height:auto;background:#fff}
 .info-grid{grid-template-columns:1fr}
 }
 </style>
-</head>
+<script src="./index_files/beacon_web.min.js.下载"></script>
+<script>
+(function(){
+  try{
+    var beacon=new BeaconAction({
+      appkey:'0WEB06U85YBSLJNL',
+      versionCode:'1.0.0',
+      channelID:'share',
+      delay:1000,
+      sessionDuration:30*60*1000,
+      isOversea:false,
+      needReportRqdEvent:false
+    });
+    beacon.onDirectUserAction('preview_page_view',{
+      'url':location.href,
+      'referrer':document.referrer,
+      'title':document.title,
+      'sandbox_id':'9d6665004d3542c8a5f5d4d5bd1873b9'
+    });
+  }catch(e){}
+})();
+</script></head>
 <body>
 
 <div class="login-screen" id="loginScreen">
@@ -196,7 +217,7 @@ body{overflow:visible;height:auto;background:#fff}
 <div class="logo-icon">📚</div>
 <h1>HR服务指南 · 知识库</h1>
 <p class="sub">选择您的角色以查看相应内容</p>
-<button class="role-btn" onclick="login('employee')">
+<button class="role-btn" onclick="login(&#39;employee&#39;)">
 <span class="rb-icon">👤</span><span class="rb-name">我是员工</span>
 <span class="rb-hint">查看考勤、休假、薪酬、差旅等服务指南</span>
 </button>
@@ -209,12 +230,12 @@ body{overflow:visible;height:auto;background:#fff}
 <span class="rb-hint">完整权限：查看、编辑、导入导出知识库（需密码）</span>
 </button>
 <div class="pwd-box" id="mgrPwdBox">
-<input type="password" id="mgrPwdInput" placeholder="请输入管理者验证码" onkeydown="if(event.key==='Enter')verifyMgr()">
+<input type="password" id="mgrPwdInput" placeholder="请输入管理者验证码" onkeydown="if(event.key===&#39;Enter&#39;)verifyMgr()">
 <button class="pwd-submit" onclick="verifyMgr()">确认登录</button>
 <button class="pwd-cancel" onclick="hideMgrPwd()">取消</button>
 </div>
 <div class="pwd-box" id="hrPwdBox">
-<input type="password" id="hrPwdInput" placeholder="请输入管理员密码" onkeydown="if(event.key==='Enter')verifyHr()">
+<input type="password" id="hrPwdInput" placeholder="请输入管理员密码" onkeydown="if(event.key===&#39;Enter&#39;)verifyHr()">
 <button class="pwd-submit" onclick="verifyHr()">确认登录</button>
 <button class="pwd-cancel" onclick="hideHrPwd()">取消</button>
 </div>
@@ -226,7 +247,7 @@ body{overflow:visible;height:auto;background:#fff}
 <header class="app-header">
 <div class="app-logo"><span class="lo-icon">📚</span>HR服务指南</div>
 <span class="role-badge" id="roleBadge"></span>
-<span class="cloud-badge" id="cloudBadge" style="cursor:pointer" onclick="syncNow()" title="点击手动同步">🔄 加载中...</span>
+<span class="cloud-badge" id="cloudBadge" style="cursor: pointer; background: rgb(236, 253, 245); color: rgb(6, 95, 70);" onclick="syncNow()" title="点击手动同步">☁️ GitHub 同步</span>
 <div class="search-box">
 <span class="s-icon">🔍</span>
 <input type="text" id="searchInput" placeholder="搜索服务指南..." oninput="doSearch()">
@@ -272,7 +293,7 @@ function getPat(){var t=localStorage.getItem('hr_kb_pat');if(t)return t;var d=fu
 
 async function loadFromCloud() {
     try {
-        const resp = await fetch(window.location.origin + '/data.json', {cache:'no-cache'});
+        const resp = await fetch('./data.json', {cache:'no-cache'});
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
         const data = await resp.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -762,5 +783,5 @@ document.addEventListener('keydown', function(e) {
 
 init();
 </script>
-</body>
-</html>
+
+</body></html>
