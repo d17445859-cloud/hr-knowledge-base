@@ -1858,15 +1858,15 @@
         "steps": [],
         "contacts": [
           {
-            "name": "直接上级",
+            "name": "直接经理",
             "role": "工作交接"
           },
           {
-            "name": "Admin",
+            "name": "Queena Wang",
             "role": "门禁清除、资产归还"
           },
           {
-            "name": "FACE Team",
+            "name": "Lillian Cong",
             "role": "财务清算"
           }
         ],
