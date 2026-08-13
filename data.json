@@ -1352,11 +1352,11 @@
             "value": "劳动合同主体注册地"
           }
         ],
-        "detail": "社保公积金按月缴纳。员工可联系FACE Team查询个人缴纳情况，也可通过各地社保局/公积金中心官网或APP自助查询。",
+        "detail": "社保公积金按月缴纳。员工可联系Lillian Cong查询个人缴纳情况，也可通过各地社保局/公积金中心官网或APP自助查询。",
         "steps": [],
         "contacts": [
           {
-            "name": "FACE Team",
+            "name": "Lillian Cong",
             "role": "社保公积金查询"
           }
         ],
