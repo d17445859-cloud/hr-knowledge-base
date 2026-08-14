@@ -247,6 +247,7 @@ var _hmt = _hmt || [];
 <span class="search-info" id="searchInfo"></span>
 <div class="header-actions">
 <button class="hdr-btn edit-off" id="editToggle" onclick="toggleEdit()">✏️ 编辑模式</button>
+<button class="hdr-btn" id="statsBtn" style="background:#eef2ff;color:#4338ca;display:none" onclick="window.open('https://tongji.baidu.com','_blank')">📊 统计</button>
 <button class="hdr-btn export-btn" onclick="exportData()">📥 导出</button>
 <button class="hdr-btn import-btn" onclick="triggerImport()">📤 导入</button>
 <button class="hdr-btn" style="background:#fefce8;color:#a16207" onclick="promptPat()">🔑 同步设置</button>
@@ -445,6 +446,7 @@ function login(role, silent) {
     badge.className = 'role-badge ' + cls[role];
     
     document.getElementById('editToggle').style.display = role === 'hr' ? '' : 'none';
+    document.getElementById('statsBtn').style.display = (role === 'hr' || role === 'manager') ? '' : 'none';
     document.getElementById('editToggle').className = 'hdr-btn edit-off';
     document.getElementById('editToggle').textContent = '✏️ 编辑模式';
     editMode = false;
