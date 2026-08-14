@@ -192,6 +192,15 @@ body{overflow:visible;height:auto;background:#fff}
 .info-grid{grid-template-columns:1fr}
 }
 </style>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?201affa9165405f4691f57cfbff5524d";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
 </head>
 <body>
 
@@ -593,6 +602,9 @@ function toggleFaq(qEl) {
 // ============ SEARCH ============
 function doSearch() {
     searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (searchQuery && window._hmt) {
+        try { _hmt.push(['_trackEvent', '搜索', '关键词', searchQuery]); } catch(e) {}
+    }
     if (!searchQuery) { selectStage(activeStageIdx); return; }
     
     const main = document.getElementById('mainContent');
