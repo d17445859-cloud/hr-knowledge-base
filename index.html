@@ -446,7 +446,7 @@ function login(role, silent) {
     badge.className = 'role-badge ' + cls[role];
     
     document.getElementById('editToggle').style.display = role === 'hr' ? '' : 'none';
-    document.getElementById('statsBtn').style.display = (role === 'hr' || role === 'manager') ? '' : 'none';
+    document.getElementById('statsBtn').style.display = role === 'hr' ? '' : 'none';
     document.getElementById('editToggle').className = 'hdr-btn edit-off';
     document.getElementById('editToggle').textContent = '✏️ 编辑模式';
     editMode = false;
