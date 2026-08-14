@@ -157,6 +157,10 @@
             "role": "Offer发放"
           },
           {
+            "name": "Jessie",
+            "role": "Offer抄送 (jessie.xiong@tjprog.com)"
+          },
+          {
             "name": "HRService CN",
             "role": "入职流程对接"
           }
@@ -279,7 +283,7 @@
         "info": [
           {
             "label": "负责方",
-            "value": "HRService CN ：准备齐全入职物品；Simon Sun：IT、权限；Queena Wang：电脑"
+            "value": "HRService CN ：准备齐全入职物品；Simon Sun：IT、权限；Queena Wang：电脑、工位准备"
           },
           {
             "label": "时间",
