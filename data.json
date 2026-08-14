@@ -279,14 +279,14 @@
         "info": [
           {
             "label": "负责方",
-            "value": "HRService CN ：准备齐全入职物品；Simon：IT、权限；Queena：电脑"
+            "value": "HRService CN ：准备齐全入职物品；Simon Sun：IT、权限；Queena Wang：电脑"
           },
           {
             "label": "时间",
             "value": "入职前4个工作日 → 入职前1个工作日"
           }
         ],
-        "detail": "入职前4个工作日：Queena领电脑\n入职前3-4个工作日：Simon装机 + 配置权限（需直线经理确认）\n入职前3个工作日：HRService CN寄出电脑（非天津入职）\n入职前1个工作日：确认工位 → 布置工位 → 邮件+电话通知候选人报到\n入职前1个工作日下午4点后：通知直线经理/BP新人即将入职",
+        "detail": "入职前4个工作日：Queena Wang领电脑\n入职前3-4个工作日：Simon Sun装机 + 配置权限（需直线经理确认）\n入职前3个工作日：HRService CN寄出电脑（非天津入职）\n入职前1个工作日：确认工位 → 布置工位 → 邮件+电话通知候选人报到\n入职前1个工作日下午4点后：通知直线经理/BP新人即将入职",
         "steps": [
           [
             "Step 1",
